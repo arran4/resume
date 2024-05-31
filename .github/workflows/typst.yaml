@@ -21,7 +21,7 @@ jobs:
 
       - name: Get Git tag
         id: tag
-        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        run: echo "REF=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - name: Rename output
         run: mv resume.pdf Arran-Ubels-${{ env.TAG }}.pdf
