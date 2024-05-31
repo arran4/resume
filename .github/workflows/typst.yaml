@@ -16,14 +16,20 @@ jobs:
         with:
           source_file: |
             resume.typ
+        env:
+          TYPST_FONT_PATHS: "./fonts/"
 
       - name: Get current date
         id: date
         run: echo "DATE=$(date +%Y-%m-%d-%H:%M)" >> $GITHUB_ENV
+
+      - name: Rename output
+        run: mv resume.pdf Arran-Ubels-`date +%F`.pdf
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: github.ref_type == 'tag'
         with:
           name: "${{ github.ref_name }} — ${{ env.DATE }}"
-          files: resume.pdf
+          files: |
+            *.pdf
