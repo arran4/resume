@@ -24,7 +24,7 @@ jobs:
         run: echo "REF=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - name: Rename output
-        run: mv resume.pdf Arran-Ubels-${{ REF }}.pdf
+        run: mv resume.pdf Arran-Ubels-${{ env.REF }}.pdf
 
       - name: Release
         uses: softprops/action-gh-release@v1
