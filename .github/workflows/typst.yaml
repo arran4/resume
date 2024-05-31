@@ -24,12 +24,12 @@ jobs:
         run: echo "REF=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - name: Rename output
-        run: mv resume.pdf Arran-Ubels-${{ env.TAG }}.pdf
+        run: mv resume.pdf Arran-Ubels-${{ REF }}.pdf
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: github.ref_type == 'tag'
         with:
-          name: "${{ github.ref_name }}"
+          name: "${{ env.REF }}"
           files: |
             *.pdf
