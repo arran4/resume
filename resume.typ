@@ -248,14 +248,14 @@
 = Projects
 
 #resume-entry(
-  title: "Golang Ical Parser & Serializer",
+  title: "Golang iCal Parser & Serializer",
   location: [#github-link("arran4/golang-ical")],
   date: "May 2018 - Present",
   description: "Developer"
 )
 
 #resume-item[
-  - Implement a bi-directional Ical parser and serializer in go - none which did both existed prior
+  - Implement a bi-directional iCal parser and serializer in go - none which did both existed prior
   - Maintain, review & merge contributions
 ]
 
