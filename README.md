@@ -1,5 +1,9 @@
 # Arran Ubels Resume
 
+
+Status: `Request for comment / corrections`
+
+
 This is my attempt at a public resume / cv. An unabridged version, abridged versions might be discoverable in snapshots. If you have any suggestions, issues, and the like please raise an issue or a PR. Why else would I do this in git. 
 
 You can download the latest compiled version (in PDF form) from:
