@@ -175,7 +175,7 @@
   - Develop and maintain Open Source: Kagura Bi, a simple reporting service, built on Karaf, Camel, Spring, REST and JQuery.
   - Maintain, adapt and expand C\# 2.0 for Windows Mobile applications
   - Work with operations to design and develop applications to assist and automate, particularly relating to AWS and SaaS offerings
-  - Worked on a couple internal startups / spin-outs in a range of languages, Go, Java, Python, C#, ColdFusion, and tools, Apache Camel, Karaf, Jboss.
+  - Worked on a couple internal startups / spin-outs in a range of languages, Go, Java, Python, C\#, ColdFusion, and tools, Apache Camel, Karaf, Jboss.
 ]
 
 #resume-entry(
@@ -194,11 +194,11 @@
   title: "Australian Sales and Promotions",
   location: "Melbourne, Australia",
   date: "2009 - 2011",
-  description: "Contract C# and Microsoft Dynamics Developer"
+  description: "Contract C\# and Microsoft Dynamics Developer"
 )
 
 #resume-item[
-  - Designed, built and maintained internal applications in C#, RCTI generator, Sales Monitoring & Reporting
+  - Designed, built and maintained internal applications in C\#, RCTI generator, Sales Monitoring & Reporting
   - Customized and extended Microsoft Dynamics with applications and plugins to meet requirements
   - Trained staff up in internal tools and Microsoft software, Dynamics, Reporting services, etc
 ]
