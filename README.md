@@ -14,4 +14,4 @@ Feel free to fork and use for your own resume, however this is based off [Modern
 
 https://github.com/arran4/resume/blob/main/.github/workflows/typst.yaml
 
-
+For suggestions / updates etc, please create a fork and then from there create a PR. 
