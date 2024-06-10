@@ -22,33 +22,31 @@
 #resume-entry(
   title: "base2Services",
   location: "Melbourne, Australia",
-  date: "2017 - 2024",
+  date: "2017 - February 2024",
   description: "Contract Software Engineer"
 )
 
-##### TODO CHANGE
 #resume-item[
-  - Develop in a wide range of languages, frameworks and environments; Go, java, kotlin, Typescript, C\#, AWS SAM, Google Apps Engine, AWS Athena/Glue BigQuery, AWS CDK, Sveltekit
-  - Consult, assist, design and develop tools, products, and documentation with business stakeholders, with emphasis on:
-    ○ Selection of appropriate technology to match the intentions of the project
-    ○ Assisting with the vision and viability of the project
-    ○ Processes of migration from the current state to the future state
-    ○ Planning, process and conversion older boutique systems to modern practices and tooling
+  - Develop in a wide range of languages, frameworks and environments.
+  - Go, Python, ColdFusion, Java, Kotlin, Typescript, C\#, Ruby, Shell Scripting
+  - AWS SAM, SvelteKit, Apache Camel, Karaf, Github Actions
+  - Designed and built a AWS Resource auditor in the style of a linter
+  - Built Jenkins Plugins relating to inventory and data warehousing (Data Lake.)
+  - Built and maintained a pure multi-container Bash application for cloud integrated RDS backups
 ]
 
 #resume-entry(
-  title: "IWT at base2Services",
+  title: "IWT",
   location: "Melbourne, Australia",
   date: "2023",
-  description: "Contract Software Engineer"
+  description: "Contract via base2Services Software Engineer"
 )
 
-##### TODO CHANGE
 #resume-item[
-  - Responsible for converting designs to a fully fledged typescript sveltekit serverless application handed over before launch to the directors of the client
+  - Took over responsibility for converting designs to a fully fledged Typescript SvelteKit serverless application handed over before launch to the directors of the client
   - Aided, trained and reviewed changes of juniors
-  - Sole senior on project, also responsible for the CI/CD system and deployment to AWS via AWS SAM & CDN
-  - Maintained libraries and components as required, pushed upstream changes as required
+  - Sole senior on project, also responsible for the CI/CD system and deployment to AWS via AWS SAM & CDN, completely Serverless deploy
+  - Maintained libraries and components as required, pushed upstream changes as required, built services to support JAM stack
 ]
 
 #resume-entry(
@@ -58,12 +56,9 @@
   description: "Contract Software Engineer"
 )
 
-##### TODO CHANGE
 #resume-item[
-  - Designed and built mail processing and templating serverless application in Go
-  - Trained staff and produced documentation for its use - Saved days of manual work
-  - Integrated with external services
-  - Worked with Python with AWS Athena, Data lake & Glue. Document existing solution, fixing and resolving issues, fully Kotlin based CDK conversion of the hand built stack.
+  - Designed, built, maintained, documented and trained resources to use; a mail integration, processing and templating serverless application in Go
+  - Worked with Python with AWS Athena, Data lake & Glue. Document pre-existing "click-ops" solution, fixing and resolving issues, fully Kotlin based CDK conversion.
 ]
 
 #resume-entry(
@@ -73,24 +68,21 @@
   description: "Freelance Software Engineer"
 )
 
-##### TODO CHANGE
 #resume-item[
-  - Go on Google Apps Engine Classic
-  - Typescript Vue.js front end
+  - Translated, quoted, designed, produced, supported a complete Excel to website conversion of their quoting application (From a set of network shared Excel 1997 XLM Macro document.)
+  - Go on Google Apps Engine Classic, Typescript Vue.js front end, Github Actions for CI
 ]
 
 #resume-entry(
-  title: "Fulfilio via base2Services",
+  title: "Fulfilio",
   location: "Melbourne, Australia",
   date: "2021",
-  description: "Contract Software Engineer"
+  description: "Contract via base2Services Software Engineer"
 )
 
-##### TODO CHANGE
 #resume-item[
-  - #lorem(20)
-  - #lorem(15)
-  - #lorem(25)
+  - Scoped, designed, built, and handed over a Apache Camel integration, using Oracle's GraalVM native compilation and AWS Fargate
+  - Jenkins for CI, Docker for the container, worked with DevOps for deployment system.
 ]
 
 #resume-entry(
@@ -100,21 +92,19 @@
   description: "Contract Software Engineer"
 )
 
-##### TODO CHANGE
 #resume-item[
-  - Educational role - No development.
-  - Was responsible for assisting a devops team learn development practices, by helping them develop an application in Python to reduce their workload.
-  - Also taught a graduate Go programming via feedback, pull request reviews, and producing educational content.
+  - Educational role - No development - Teaching programming in Python + Django to assist with career change to DevOps.
+  - Was responsible for assisting a ops team learn development practices, by helping them develop an application in Python to reduce their workload.
+  - Taught CA cert checking, and OAuth2 low levels, also Go programming via feedback, pull request reviews, and producing educational content.
 ]
 
 #resume-entry(
-  title: "Redbubble via Cogent",
+  title: "Redbubble",
   location: "Melbourne, Australia",
   date: "2020",
-  description: "Contract Software Engineer"
+  description: "Contract via Cogent Software Engineer"
 )
 
-##### TODO CHANGE
 #resume-item[
   - Part of a new team created to assist the marketing team with data integration projects
   - Used AWS Lambda, AWS Event Bridge, Apache Airflow, and GCP Bigquery for (mostly) Google Analytics
@@ -122,27 +112,26 @@
 ]
 
 #resume-entry(
-  title: "City Of Melbourne via Cogent",
+  title: "City Of Melbourne",
   location: "Melbourne, Australia",
   date: "2019",
-  description: "Contract Software Engineer"
+  description: "Contract via Cogent Software Engineer"
 )
 
-##### TODO CHANGE
 #resume-item[
-  - Worked on the early stages of “Whats On”, did estimation, client liaison, and the initial build out from designs in Vue.js with a Ruby on Rails backend
+  - Contract for the early stages of City of Melbourne “Whats On”. Consultation, design, estimate, and site scaffolding.
+  - Vue.js with a Ruby on Rails + Postgres backend
 ]
 
 #resume-entry(
-  title: "Hooroo / Qantas via Cogent",
+  title: "Qantas/Jetstar (formally Hooroo)",
   location: "Melbourne, Australia",
   date: "2019",
-  description: "Contract Software Engineer"
+  description: "Contract via Cogent Software Engineer"
 )
 
-##### TODO CHANGE
 #resume-item[
-  - Assisted lead developer on Typescript RxJS based React based vertical of the main site. Day to day work.
+  - Short contract to assisted lead developer with day to day for a Typescript - RxJS - React based vertical slice "Jetstar Packages".
 ]
 
 #resume-entry(
@@ -152,9 +141,9 @@
   description: "Freelance Software Engineer - XLM & VBA"
 )
 
-##### TODO CHANGE
 #resume-item[
-  - Translated, quoted, designed, produced, supported a complete Excel to website conversion of their quoting application (From a set of network shared Excel 1997 XLM Macro document.)
+  - Initial engagement, maintain the existing application with a couple of needed expansions as I learned the system for a future build out
+  - Took client requirements, quoted, build, deployed and supported changes to an existing Excel XLM application (added some VBA for easier reading.)
 ]
 
 #resume-entry(
@@ -164,12 +153,10 @@
   description: "Cofounder"
 )
 
-##### TODO CHANGE
 #resume-item[
-  - Did a bit of everything but mostly did software development.
-  - Developed an end to end solution in Go and React.JS, some low level POSIX calls, vt102, encryption and SSL research and work in order to design and build solutions fully. Fully Go and React.js based stack, redis, etcd, docker.
   - Went through an accelerator, sought customers, architecture, planning, finances, etc
-  - Designed and built a solution from ground up
+  - 80% of the dev and ops work: built out a full suite of Micro services. Using, Go, React, etcd, redis, TiDB, Wrecker (CI), extensive use of Docker,
+  - Built desktop apps, web apps, Android mobile app.
 ]
 
 #resume-entry(
@@ -179,41 +166,41 @@
   description: "Application & Integration Developer"
 )
 
-##### TODO CHANGE
 #resume-item[
-  - At base2Services was to design, develop and deploy solutions for clients both external and internal. Development is done using a simplified Scrum methodology.
+  - Design, develop and deploy solutions for clients both external and internal.
+  - SCRUM Software life cycle.
   - Implement and maintain a Continuous Integration (CI) pipeline for existing and new projects, Jenkins and Octopus Deploy
-  - Maintain, estimate and extend existing Jboss 4 and Jboss 7 SaaS applications
+  - Maintain, estimate and extend existing Jboss 4 and Jboss 7 Java applications
   - Extend existing applications with REST and SOAP based API for 3rd parties and mobile devices
-  - Produce Kagura Bi, a simple reporting service, built on Karaf, Camel, Spring, REST and JQuery (In the process of making it an open source project)
-  - Develop applications using C\# for Windows Mobile
+  - Develop and maintain Open Source: Kagura Bi, a simple reporting service, built on Karaf, Camel, Spring, REST and JQuery.
+  - Maintain, adapt and expand C\# 2.0 for Windows Mobile applications
   - Work with operations to design and develop applications to assist and automate, particularly relating to AWS and SaaS offerings
-  - Worked on a couple internal startups / spinouts at various stages.
+  - Worked on a couple internal startups / spin-outs in a range of languages, Go, Java, Python, C#, ColdFusion, and tools, Apache Camel, Karaf, Jboss.
 ]
 
 #resume-entry(
   title: "Ubels Computer Services",
   location: "Melbourne, Australia",
-  date: "2009 - 2012",
-  description: "Software Developer and System Admin"
+  date: "2009 - 2011",
+  description: "Contract Software Developer and System Admin"
 )
 
-##### TODO CHANGE
 #resume-item[
-  - Built Android Apps. Deployed and maintained ESXi Servers, running LAMP stack educational software (such as Moodle.)
+  - Built Android Apps. Deployed and maintained ESXi Servers, running LAMP stack educational software (mostly Moodle/Mahara.)
+  - Designed and documented deployments, and infrastructure at various small clients.
 ]
 
 #resume-entry(
   title: "Australian Sales and Promotions",
   location: "Melbourne, Australia",
-  date: "2009 - 2012",
+  date: "2009 - 2011",
   description: "Contract C# and Microsoft Dynamics Developer"
 )
 
-##### TODO CHANGE
 #resume-item[
-  - Built and maintained internal applications, such as an RCTI generator, and sales monitoring applications
-  - Customized and extended Dynamics with applications and plugins to meet requirements
+  - Designed, built and maintained internal applications in C#, RCTI generator, Sales Monitoring & Reporting
+  - Customized and extended Microsoft Dynamics with applications and plugins to meet requirements
+  - Trained staff up in internal tools and Microsoft software, Dynamics, Reporting services, etc
 ]
 
 #resume-entry(
@@ -224,8 +211,7 @@
 )
 
 #resume-item[
-##### TODO CHANGE
-  - Maintained Sun Solaris Servers and Nortel IVRs inside Telstra, Sensis, and some banks and mining companies
+  - Maintained Sun Servers (Solaris 8,9,10) and Nortel IVRs inside Telstra, Sensis, and some banks and mining companies
   - Built internal tools in PHP, and built up the KnowledgeBase (a wiki)
 ]
 
@@ -251,7 +237,7 @@
   title: "Golang iCal Parser & Serializer",
   location: [#github-link("arran4/golang-ical")],
   date: "May 2018 - Present",
-  description: "Developer"
+  description: "BDFL"
 )
 
 #resume-item[
@@ -259,8 +245,18 @@
   - Maintain, review & merge contributions
 ]
 
-##### TODO CHANGE
-// = Skills
-//
-// #resume-skill-item("Languages", (strong("C++"), "Python", "Java", "C#", "JavaScript", "TypeScript"))
-// #resume-skill-item("Tools", (strong("Excel"),))
+= Preferences
+
+I am comfortable with most languages, however that doesn't mean I don't have preferences.
+
+#resume-skill-item("Languages", (strong("Go"), strong("Typescript"), "Dart", ))
+#resume-skill-item("Frameworks", (strong("SvelteKit"), strong("Flutter"), "Vue", ))
+#resume-skill-item("Tools", (strong("Github Actions"), "Gitlab", "Jenkins", "AWS SAM CLI", ))
+#resume-skill-item("Infra", (strong("FaaS"), strong("Google App Engine"), "ECS / Fargate", "Containerization", ))
+
+= Aspirations
+
+I am interested in getting more involved with some technologies that I haven't used yet.
+
+#resume-skill-item("Languages", (strong("Rust"), strong("Zig"), "WASM", ))
+#resume-skill-item("Tools", (strong("Kubernetes"), ))
