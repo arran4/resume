@@ -11,20 +11,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Get Git tag
+        id: tag
+        run: echo "REF=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
       - name: Typst
         uses: lvignoli/typst-action@main
         with:
           source_file: |
             resume.typ
+          options: |
+            Arran-Ubels-${{ env.REF }}.pdf
         env:
           TYPST_FONT_PATHS: "./fonts/"
 
-      - name: Get Git tag
-        id: tag
-        run: echo "REF=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-
-      - name: Rename output
-        run: mv resume.pdf Arran-Ubels-${{ env.REF }}.pdf
+      - name: Typst
+        uses: lvignoli/typst-action@main
+        with:
+          source_file: |
+            resume.typ
+          options: |
+            -f
+            png
+            arran-ubels-resume-v1.0.1-page-{n}.png
+        env:
+          TYPST_FONT_PATHS: "./fonts/"
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -33,3 +44,4 @@ jobs:
           name: "${{ env.REF }}"
           files: |
             *.pdf
+            *.png
