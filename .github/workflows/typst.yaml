@@ -16,12 +16,10 @@ jobs:
         run: echo "REF=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - name: Typst
-        uses: lvignoli/typst-action@main
+        uses: arran4/typst-action@patch-2
         with:
           source_file: |
-            resume.typ
-          options: |
-            Arran-Ubels-${{ env.REF }}.pdf
+            resume.typ:Arran-Ubels-${{ env.REF }}.pdf
         env:
           TYPST_FONT_PATHS: "./fonts/"
 
@@ -29,11 +27,10 @@ jobs:
         uses: lvignoli/typst-action@main
         with:
           source_file: |
-            resume.typ
+            resume.typ:arran-ubels-resume-v1.0.1-page-{n}.png
           options: |
             -f
             png
-            arran-ubels-resume-v1.0.1-page-{n}.png
         env:
           TYPST_FONT_PATHS: "./fonts/"
 
