@@ -24,7 +24,7 @@ jobs:
           TYPST_FONT_PATHS: "./fonts/"
 
       - name: Typst
-        uses: lvignoli/typst-action@main
+        uses: arran4/typst-action@patch-2
         with:
           source_file: |
             resume.typ:arran-ubels-resume-v1.0.1-page-{n}.png
