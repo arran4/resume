@@ -39,7 +39,7 @@
   title: "IWT",
   location: "Melbourne, Australia",
   date: "2023",
-  description: "Contract via base2Services Software Engineer"
+  description: "Contract Software Engineer via base2Services"
 )
 
 #resume-item[
@@ -77,7 +77,7 @@
   title: "Fulfilio",
   location: "Melbourne, Australia",
   date: "2021",
-  description: "Contract via base2Services Software Engineer"
+  description: "Contract Software Engineer via base2Services"
 )
 
 #resume-item[
@@ -102,7 +102,7 @@
   title: "Redbubble",
   location: "Melbourne, Australia",
   date: "2020",
-  description: "Contract via Cogent Software Engineer"
+  description: "Contract Software Engineer via Cogent"
 )
 
 #resume-item[
@@ -115,7 +115,7 @@
   title: "City Of Melbourne",
   location: "Melbourne, Australia",
   date: "2019",
-  description: "Contract via Cogent Software Engineer"
+  description: "Contract Software Engineer via Cogent"
 )
 
 #resume-item[
@@ -127,7 +127,7 @@
   title: "Qantas/Jetstar (formally Hooroo)",
   location: "Melbourne, Australia",
   date: "2019",
-  description: "Contract via Cogent Software Engineer"
+  description: "Contract Software Engineer via Cogent"
 )
 
 #resume-item[
