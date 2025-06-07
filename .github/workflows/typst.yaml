@@ -13,7 +13,10 @@ jobs:
 
       - name: Get Git tag
         id: tag
-        run: echo "REF=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+        run: |
+          REF=${GITHUB_REF#refs/*/}
+          REF=${REF//\//-}
+          echo "REF=$REF" >> $GITHUB_ENV
 
       - name: Typst
         uses: arran4/typst-action@patch-2
