@@ -23,6 +23,23 @@ jobs:
         env:
           TYPST_FONT_PATHS: "./fonts/"
 
+      - name: Generate preview image
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ghostscript
+          mkdir -p assets
+          gs -sDEVICE=png16m -dNOPAUSE -dBATCH -dSAFER -r300 -dFirstPage=1 -dLastPage=1 \
+            -sOutputFile=assets/resume-preview.png Arran-Ubels-${{ env.REF }}.pdf
+
+      - name: Commit preview image
+        if: github.ref_type == 'tag'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/resume-preview.png
+          git commit -m "Update preview image for ${{ env.REF }}" || echo "no changes"
+          git push origin HEAD:main
+
       - name: Typst
         uses: arran4/typst-action@patch-2
         with:
