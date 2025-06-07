@@ -7,9 +7,19 @@ You can download the latest compiled version (in PDF form) from:
 
 https://github.com/arran4/resume/releases
 
-Or build it yourself, you will need to install `typst` on your platform. Details on how to do that can be found here: 
+Or build it yourself, you will need to install `typst` on your platform. Details on how to do that can be found here:
 
 https://typst.app/
+
+Typst will automatically fetch packages listed in `typst.toml`. When compiling
+for the first time, ensure you have network access so the
+`modern-cv` package can be downloaded via Typst's package manager. Simply run
+
+```sh
+typst compile resume.typ
+```
+
+and Typst will retrieve the dependency before building the PDF.
 
 Feel free to fork and use for your own resume, however this is based off [Modern CV](https://typst.app/universe/package/modern-cv/) so you are best to start there, however feel free to copy the github actions code for compiling on tagging:
 
