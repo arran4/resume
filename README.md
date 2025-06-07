@@ -1,5 +1,7 @@
 # Arran Ubels Resume
 
+![Preview](assets/resume-preview.png)
+
 
 This is my attempt at a public resume / cv. An unabridged version, abridged versions might be discoverable in snapshots. If you have any suggestions, issues, and the like please raise an issue or a PR. Why else would I do this in git. 
 
