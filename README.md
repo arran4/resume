@@ -7,7 +7,7 @@ You can download the latest compiled version (in PDF form) from:
 
 https://github.com/arran4/resume/releases
 
-Or build it yourself. You will need to install `typst` on your platform. The easiest way is to follow the official instructions from [Typst](https://typst.app/docs/install/).
+Or build it yourself, you will need to install `typst` on your platform. Details on how to do that can be found here: 
 
 ## Installing Typst
 
