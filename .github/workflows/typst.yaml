@@ -9,11 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
 
       - name: Get Git tag
         id: tag
-        run: echo "REF=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+        run: |
+          REF=${GITHUB_REF#refs/*/}
+          REF=${REF//\//-}
+          echo "REF=$REF" >> $GITHUB_ENV
 
       - name: Typst
         uses: arran4/typst-action@v0.2
@@ -35,7 +38,7 @@ jobs:
           TYPST_FONT_PATHS: "./fonts/"
 
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: github.ref_type == 'tag'
         with:
           name: "${{ env.REF }}"
