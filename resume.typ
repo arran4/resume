@@ -119,7 +119,7 @@
 )
 
 #resume-item[
-  - Contract for the early stages of City of Melbourne “Whats On”. Consultation, design, estimate, and site scaffolding.
+  - Contract for the early stages of City of Melbourne “What's On”. Consultation, design, estimate, and site scaffolding.
   - Vue.js with a Ruby on Rails + Postgres backend
 ]
 

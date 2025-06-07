@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get Git tag
         id: tag
@@ -19,7 +19,7 @@ jobs:
           echo "REF=$REF" >> $GITHUB_ENV
 
       - name: Typst
-        uses: arran4/typst-action@patch-2
+        uses: arran4/typst-action@v0.2
         with:
           source_file: |
             resume.typ:Arran-Ubels-${{ env.REF }}.pdf
@@ -27,7 +27,7 @@ jobs:
           TYPST_FONT_PATHS: "./fonts/"
 
       - name: Typst
-        uses: arran4/typst-action@patch-2
+        uses: arran4/typst-action@v0.2
         with:
           source_file: |
             resume.typ:arran-ubels-resume-v1.0.1-page-{n}.png
@@ -38,7 +38,7 @@ jobs:
           TYPST_FONT_PATHS: "./fonts/"
 
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: github.ref_type == 'tag'
         with:
           name: "${{ env.REF }}"
