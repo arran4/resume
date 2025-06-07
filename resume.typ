@@ -176,7 +176,7 @@
   - Developed and maintained an open-source project, Kagura Bi, a simple reporting service built on Karaf, Camel, Spring, REST, and jQuery.
   - Maintained, adapted, and expanded C\# 2.0 for Windows Mobile applications
   - Worked with operations to design and develop applications to assist and automate tasks, particularly relating to AWS and SaaS offerings
-  - Worked on a couple of internal startups/spin-outs using a range of languages—Go, Java, Python, C#, ColdFusion—and tools like Apache Camel, Karaf, and JBoss.
+  - Worked on a couple of internal startups/spin-outs using a range of languages—Go, Java, Python, C\#, ColdFusion—and tools like Apache Camel, Karaf, and JBoss.
 ]
 
 #resume-entry(
@@ -199,7 +199,7 @@
 )
 
 #resume-item[
-  - Designed, built, and maintained internal applications in C#, an RCTI generator, and Sales Monitoring & Reporting tools
+  - Designed, built, and maintained internal applications in C\#, an RCTI generator, and Sales Monitoring & Reporting tools
   - Customized and extended Microsoft Dynamics with applications and plugins to meet requirements
   - Trained staff in internal tools and Microsoft software, including Dynamics and Reporting Services.
 ]
