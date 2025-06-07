@@ -27,12 +27,12 @@
 )
 
 #resume-item[
-  - Develop in a wide range of languages, frameworks and environments.
+  - Develop in a wide range of languages, frameworks, and environments.
   - Go, Python, ColdFusion, Java, Kotlin, Typescript, C\#, Ruby, Shell Scripting
-  - AWS SAM, SvelteKit, Apache Camel, Karaf, Github Actions
-  - Designed and built a AWS Resource auditor in the style of a linter
-  - Built Jenkins Plugins relating to inventory and data warehousing (Data Lake.)
-  - Built and maintained a pure multi-container Bash application for cloud integrated RDS backups
+  - AWS SAM, SvelteKit, Apache Camel, Karaf, GitHub Actions
+  - Designed and built an AWS Resource auditor in the style of a linter
+  - Built Jenkins plugins relating to inventory and data warehousing (Data Lake).
+  - Built and maintained a pure multi-container Bash application for cloud-integrated RDS backups
 ]
 
 #resume-entry(
@@ -43,8 +43,8 @@
 )
 
 #resume-item[
-  - Took over responsibility for converting designs to a fully fledged Typescript SvelteKit serverless application handed over before launch to the directors of the client
-  - Aided, trained and reviewed changes of juniors
+  - Took over responsibility for converting designs to a fully-fledged Typescript SvelteKit serverless application handed over before launch to the directors of the client
+  - Aided, trained, and reviewed the work of junior developers
   - Sole senior on project, also responsible for the CI/CD system and deployment to AWS via AWS SAM & CDN, completely Serverless deploy
   - Maintained libraries and components as required, pushed upstream changes as required, built services to support JAM stack
 ]
@@ -57,8 +57,8 @@
 )
 
 #resume-item[
-  - Designed, built, maintained, documented and trained resources to use; a mail integration, processing and templating serverless application in Go
-  - Worked with Python with AWS Athena, Data lake & Glue. Document pre-existing "click-ops" solution, fixing and resolving issues, fully Kotlin based CDK conversion.
+  - Designed, built, maintained, and documented a mail integration, processing, and templating serverless application in Go, training resources to use it
+  - Worked with Python with AWS Athena, Data Lake & Glue. Documented a pre-existing "click-ops" solution, fixing and resolving issues, and completed a fully Kotlin-based CDK conversion.
 ]
 
 #resume-entry(
@@ -69,8 +69,8 @@
 )
 
 #resume-item[
-  - Translated, quoted, designed, produced, supported a complete Excel to website conversion of their quoting application (From a set of network shared Excel 1997 XLM Macro document.)
-  - Go on Google Apps Engine Classic, Typescript Vue.js front end, Github Actions for CI
+  - Translated, quoted, designed, produced, and supported a complete Excel-to-website conversion of their quoting application (from a set of network-shared Excel 1997 XLM macro documents).
+  - Go on Google App Engine Classic, Typescript Vue.js front-end, GitHub Actions for CI
 ]
 
 #resume-entry(
@@ -81,8 +81,8 @@
 )
 
 #resume-item[
-  - Scoped, designed, built, and handed over a Apache Camel integration, using Oracle's GraalVM native compilation and AWS Fargate
-  - Jenkins for CI, Docker for the container, worked with DevOps for deployment system.
+  - Scoped, designed, built, and handed over an Apache Camel integration using Oracle's GraalVM native compilation and AWS Fargate
+  - Jenkins for CI, Docker for the container, worked with DevOps for the deployment system.
 ]
 
 #resume-entry(
@@ -93,9 +93,9 @@
 )
 
 #resume-item[
-  - Educational role - No development - Teaching programming in Python + Django to assist with career change to DevOps.
-  - Was responsible for assisting a ops team learn development practices, by helping them develop an application in Python to reduce their workload.
-  - Taught CA cert checking, and OAuth2 low levels, also Go programming via feedback, pull request reviews, and producing educational content.
+  - Educational role—no development—teaching programming in Python and Django to assist with a career change to DevOps.
+  - Was responsible for helping an ops team learn development practices by guiding them to develop a Python application to reduce their workload.
+  - Taught CA certificate checking and OAuth2 fundamentals, as well as Go programming via feedback, pull request reviews, and educational content.
 ]
 
 #resume-entry(
@@ -107,8 +107,8 @@
 
 #resume-item[
   - Part of a new team created to assist the marketing team with data integration projects
-  - Used AWS Lambda, AWS Event Bridge, Apache Airflow, and GCP Bigquery for (mostly) Google Analytics
-  - Mostly developed in Typescript. Was some Typescript + React development.
+  - Used AWS Lambda, AWS Event Bridge, Apache Airflow, and GCP BigQuery for (mostly) Google Analytics
+  - Mostly developed in Typescript, with some Typescript + React development.
 ]
 
 #resume-entry(
@@ -131,7 +131,7 @@
 )
 
 #resume-item[
-  - Short contract to assisted lead developer with day to day for a Typescript - RxJS - React based vertical slice "Jetstar Packages".
+  - Short contract assisting the lead developer with day-to-day for a Typescript–RxJS–React-based vertical slice "Jetstar Packages".
 ]
 
 #resume-entry(
@@ -142,8 +142,8 @@
 )
 
 #resume-item[
-  - Initial engagement, maintain the existing application with a couple of needed expansions as I learned the system for a future build out
-  - Took client requirements, quoted, build, deployed and supported changes to an existing Excel XLM application (added some VBA for easier reading.)
+  - Initial engagement: maintained the existing application with a couple of needed expansions as I learned the system for a future build-out
+  - Took client requirements, quoted, built, deployed, and supported changes to an existing Excel XLM application (added some VBA for easier reading)
 ]
 
 #resume-entry(
@@ -154,9 +154,9 @@
 )
 
 #resume-item[
-  - Went through an accelerator, sought customers, architecture, planning, finances, etc
-  - 80% of the dev and ops work: built out a full suite of Micro services. Using, Go, React, etcd, redis, TiDB, Wrecker (CI), extensive use of Docker,
-  - Built desktop apps, web apps, Android mobile app.
+  - Went through an accelerator; handled customers, architecture, planning, and finances, etc
+  - 80% of the dev and ops work: built out a full suite of micro services using Go, React, etcd, Redis, TiDB, and Wrecker (CI), with extensive use of Docker.
+  - Built desktop apps, web apps, and an Android mobile app.
 ]
 
 #resume-entry(
@@ -167,15 +167,15 @@
 )
 
 #resume-item[
-  - Design, develop and deploy solutions for clients both external and internal.
-  - SCRUM Software life cycle.
-  - Implement and maintain a Continuous Integration (CI) pipeline for existing and new projects, Jenkins and Octopus Deploy
-  - Maintain, estimate and extend existing Jboss 4 and Jboss 7 Java applications
-  - Extend existing applications with REST and SOAP based API for 3rd parties and mobile devices
-  - Develop and maintain Open Source: Kagura Bi, a simple reporting service, built on Karaf, Camel, Spring, REST and JQuery.
-  - Maintain, adapt and expand C\# 2.0 for Windows Mobile applications
-  - Work with operations to design and develop applications to assist and automate, particularly relating to AWS and SaaS offerings
-  - Worked on a couple internal startups / spin-outs in a range of languages, Go, Java, Python, C\#, ColdFusion, and tools, Apache Camel, Karaf, Jboss.
+  - Design, develop, and deploy solutions for both external and internal clients.
+  - SCRUM software life cycle.
+  - Implemented and maintained a Continuous Integration (CI) pipeline for existing and new projects using Jenkins and Octopus Deploy
+  - Maintained, estimated, and extended existing JBoss 4 and JBoss 7 Java applications
+  - Extended existing applications with REST- and SOAP-based APIs for third parties and mobile devices
+  - Developed and maintained an open-source project, Kagura Bi, a simple reporting service built on Karaf, Camel, Spring, REST, and jQuery.
+  - Maintained, adapted, and expanded C\# 2.0 for Windows Mobile applications
+  - Worked with operations to design and develop applications to assist and automate tasks, particularly relating to AWS and SaaS offerings
+  - Worked on a couple of internal startups/spin-outs using a range of languages—Go, Java, Python, C#, ColdFusion—and tools like Apache Camel, Karaf, and JBoss.
 ]
 
 #resume-entry(
@@ -186,8 +186,8 @@
 )
 
 #resume-item[
-  - Built Android Apps. Deployed and maintained ESXi Servers, running LAMP stack educational software (mostly Moodle/Mahara.)
-  - Designed and documented deployments, and infrastructure at various small clients.
+  - Built Android apps. Deployed and maintained ESXi servers running LAMP-stack educational software (mostly Moodle/Mahara).
+  - Designed and documented deployments and infrastructure at various small clients.
 ]
 
 #resume-entry(
@@ -198,9 +198,9 @@
 )
 
 #resume-item[
-  - Designed, built and maintained internal applications in C\#, RCTI generator, Sales Monitoring & Reporting
+  - Designed, built, and maintained internal applications in C#, an RCTI generator, and Sales Monitoring & Reporting tools
   - Customized and extended Microsoft Dynamics with applications and plugins to meet requirements
-  - Trained staff up in internal tools and Microsoft software, Dynamics, Reporting services, etc
+  - Trained staff in internal tools and Microsoft software, including Dynamics and Reporting Services.
 ]
 
 #resume-entry(
@@ -211,8 +211,8 @@
 )
 
 #resume-item[
-  - Maintained Sun Servers (Solaris 8,9,10) and Nortel IVRs inside Telstra, Sensis, and some banks and mining companies
-  - Built internal tools in PHP, and built up the KnowledgeBase (a wiki)
+  - Maintained Sun servers (Solaris 8, 9, 10) and Nortel IVRs inside Telstra, Sensis, and various banks and mining companies
+  - Built internal tools in PHP and built up the KnowledgeBase (a wiki)
 ]
 
 = Education
@@ -241,17 +241,17 @@
 )
 
 #resume-item[
-  - Implement a bi-directional iCal parser and serializer in go - none which did both existed prior
-  - Maintain, review & merge contributions
+  - Implemented a bi-directional iCal parser and serializer in Go—none that did both existed prior
+  - Maintain, review, and merge contributions
 ]
 
 = Preferences
 
-I am comfortable with most languages, however that doesn't mean I don't have preferences.
+I am comfortable with most languages; however, that doesn't mean I don't have preferences.
 
 #resume-skill-item("Languages", (strong("Go"), strong("Typescript"), "Dart", ))
 #resume-skill-item("Frameworks", (strong("SvelteKit"), strong("Flutter"), "Vue", ))
-#resume-skill-item("Tools", (strong("Github Actions"), "Gitlab", "Jenkins", "AWS SAM CLI", ))
+#resume-skill-item("Tools", (strong("GitHub Actions"), "GitLab", "Jenkins", "AWS SAM CLI", ))
 #resume-skill-item("Infra", (strong("FaaS"), strong("Google App Engine"), "ECS / Fargate", "Containerization", ))
 
 = Aspirations
