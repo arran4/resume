@@ -41,7 +41,19 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add assets/resume-preview.png
           git commit -m "Update preview image for ${{ env.REF }}" || echo "no changes"
-          git push origin HEAD:main
+
+      - name: Create Pull Request for preview image
+        if: github.ref_type == 'tag'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: auto/preview-image-update-${{ env.REF }}
+          title: "Update preview image for ${{ env.REF }}"
+          commit-message: "Update preview image for ${{ env.REF }}"
+          body: |
+            Automated update of resume preview image for version ${{ env.REF }}.
+          base: main
+          add-paths: |
+            assets/resume-preview.png
 
       - name: Typst
         uses: arran4/typst-action@v0.2
