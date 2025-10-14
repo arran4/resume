@@ -4,7 +4,7 @@ version = "0.1.0"
 entrypoint = "resume.typ"
 
 [dependencies]
-modern-cv = "0.7.0"
+modern-cv = "0.9.0"
 
 [fonts]
 paths = ["fonts"]
