@@ -1,5 +1,15 @@
 name: Build Typst document
-on: [push, workflow_dispatch]
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+    inputs:
+      update_preview:
+        description: "Commit the generated preview image directly to the default branch"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -10,8 +20,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Get Git tag
+      - name: Get Git reference
         id: tag
         run: |
           REF=${GITHUB_REF#refs/*/}
@@ -34,16 +46,27 @@ jobs:
           gs -sDEVICE=png16m -dNOPAUSE -dBATCH -dSAFER -r300 -dFirstPage=1 -dLastPage=1 \
             -sOutputFile=assets/resume-preview.png Arran-Ubels-${{ env.REF }}.pdf
 
+      - name: Check for preview changes
+        id: preview_diff
+        run: |
+          if git diff --quiet -- assets/resume-preview.png; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Commit preview image
-        if: github.ref_type == 'tag'
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.update_preview == 'true' && steps.preview_diff.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --ff-only
           git add assets/resume-preview.png
-          git commit -m "Update preview image for ${{ env.REF }}" || echo "no changes"
+          git commit -m "Update preview image for ${{ env.REF }}"
+          git push
 
       - name: Create Pull Request for preview image
-        if: github.ref_type == 'tag'
+        if: github.ref_type == 'tag' && steps.preview_diff.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
           branch: auto/preview-image-update-${{ env.REF }}
@@ -51,6 +74,7 @@ jobs:
           commit-message: "Update preview image for ${{ env.REF }}"
           body: |
             Automated update of resume preview image for version ${{ env.REF }}.
+            Generated from tag `${{ env.REF }}`.
           base: main
           add-paths: |
             assets/resume-preview.png
@@ -66,6 +90,16 @@ jobs:
         env:
           TYPST_FONT_PATHS: "./fonts/"
 
+      - name: Upload resume artifacts
+        if: github.ref_type == 'tag' && steps.preview_diff.outputs.changed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: resume-${{ env.REF }}
+          path: |
+            Arran-Ubels-${{ env.REF }}.pdf
+            arran-ubels-resume-v1.0.1-page-*.png
+            assets/resume-preview.png
+
       - name: Release
         uses: softprops/action-gh-release@v2
         if: github.ref_type == 'tag'
@@ -74,3 +108,4 @@ jobs:
           files: |
             *.pdf
             *.png
+            assets/resume-preview.png
