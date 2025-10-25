@@ -30,13 +30,15 @@ jobs:
           REF=${REF//\//-}
           echo "REF=$REF" >> $GITHUB_ENV
 
-      - name: Typst
-        uses: arran4/typst-action@v0.2
+      - name: Install Typst 0.14.0
+        uses: typst-community/setup-typst@v4
         with:
-          source_file: |
-            resume.typ:Arran-Ubels-${{ env.REF }}.pdf
+          typst-version: "0.14.0"
+
+      - name: Compile resume PDF
         env:
           TYPST_FONT_PATHS: "./fonts/"
+        run: typst compile resume.typ "Arran-Ubels-${{ env.REF }}.pdf"
 
       - name: Generate preview image
         run: |
@@ -79,16 +81,10 @@ jobs:
           add-paths: |
             assets/resume-preview.png
 
-      - name: Typst
-        uses: arran4/typst-action@v0.2
-        with:
-          source_file: |
-            resume.typ:arran-ubels-resume-v1.0.1-page-{n}.png
-          options: |
-            -f
-            png
+      - name: Compile resume PNG pages
         env:
           TYPST_FONT_PATHS: "./fonts/"
+        run: typst compile -f png resume.typ arran-ubels-resume-v1.0.1-page-{n}.png
 
       - name: Upload resume artifacts
         if: github.ref_type == 'tag' && steps.preview_diff.outputs.changed == 'true'
