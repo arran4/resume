@@ -51,7 +51,7 @@ typst compile resume.typ
 
 and Typst will retrieve the dependency before building the PDF.
 
-Feel free to fork and use for your own resume, however this is based off [Modern CV](https://typst.app/universe/package/modern-cv/) so you are best to start there, however feel free to copy the github actions code for compiling on tagging:
+This project is source-available for reference purposes only. Please do not redistribute or reuse the content without permission. However, feel free to copy the github actions code for compiling on tagging:
 
 https://github.com/arran4/resume/blob/main/.github/workflows/typst.yaml
 
