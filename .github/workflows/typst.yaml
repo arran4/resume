@@ -91,6 +91,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: resume-${{ env.REF }}
+          retention-days: 5
           path: |
             Arran-Ubels-${{ env.REF }}.pdf
             Arran-Ubels-${{ env.REF }}-page-*.png
