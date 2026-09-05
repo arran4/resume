@@ -1,8 +1,15 @@
 name: Build Typst document
+
+# Agent rules for generation:
+# https://arran4.github.io/blog/post/2026/042-simplified-github-ci-release-safe/
+# Release safety details:
+# https://arran4.github.io/blog/post/2026/041-release-safe-single-owner-github-ci/
+# This repo intentionally uses an external-tag-only publisher path.
+
 on:
   push:
     tags:
-      - '*'
+      - 'v*'
   workflow_dispatch:
     inputs:
       update_preview:
@@ -12,13 +19,24 @@ on:
         type: boolean
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.preview_diff.outputs.changed }}
+      ref: ${{ steps.tag.outputs.REF }}
     steps:
+      - name: Validate Release Tag
+        if: github.ref_type == 'tag'
+        run: |
+          TAG_NAME="${{ github.ref_name }}"
+          if [[ ! "$TAG_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.]+)?$ ]]; then
+            echo "Invalid release tag format: $TAG_NAME" >&2
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -30,6 +48,7 @@ jobs:
           REF=${GITHUB_REF#refs/*/}
           REF=${REF//\//-}
           echo "REF=$REF" >> $GITHUB_ENV
+          echo "REF=$REF" >> $GITHUB_OUTPUT
 
       - name: Install Typst 0.14.0
         uses: typst-community/setup-typst@v4
@@ -48,6 +67,11 @@ jobs:
           mkdir -p assets
           typst compile --ppi 300 --pages 1 resume.typ assets/resume-preview.png
 
+      - name: Compile resume PNG pages
+        env:
+          TYPST_FONT_PATHS: "./fonts/"
+        run: typst compile -f png resume.typ "Arran-Ubels-${{ env.REF }}-page-{n}.png"
+
       - name: Check for preview changes
         id: preview_diff
         run: |
@@ -57,51 +81,88 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Commit preview image
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.update_preview == 'true' && steps.preview_diff.outputs.changed == 'true'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git pull --ff-only
-          git add assets/resume-preview.png
-          git commit -m "Update preview image for ${{ env.REF }}"
-          git push
-
-      - name: Create Pull Request for preview image
-        if: github.ref_type == 'tag' && steps.preview_diff.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@v5
-        with:
-          branch: auto/preview-image-update-${{ env.REF }}
-          title: "Update preview image for ${{ env.REF }}"
-          commit-message: "Update preview image for ${{ env.REF }}"
-          body: |
-            Automated update of resume preview image for version ${{ env.REF }}.
-            Generated from tag `${{ env.REF }}`.
-          base: main
-          add-paths: |
-            assets/resume-preview.png
-
-      - name: Compile resume PNG pages
-        env:
-          TYPST_FONT_PATHS: "./fonts/"
-        run: typst compile -f png resume.typ "Arran-Ubels-${{ env.REF }}-page-{n}.png"
-
-      - name: Upload resume artifacts
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: resume-${{ env.REF }}
+          name: build-artifacts-${{ env.REF }}
           retention-days: 5
           path: |
             Arran-Ubels-${{ env.REF }}.pdf
             Arran-Ubels-${{ env.REF }}-page-*.png
             assets/resume-preview.png
+          include-hidden-files: true
 
+  update-preview:
+    needs: [build]
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.update_preview == 'true' && needs.build.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts-${{ needs.build.outputs.ref }}
+          path: .
+      - name: Commit preview image
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --ff-only
+          git add assets/resume-preview.png
+          git commit -m "Update preview image for ${{ needs.build.outputs.ref }}"
+          git push
+
+  create-preview-pr:
+    needs: [build]
+    if: github.ref_type == 'tag' && needs.build.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts-${{ needs.build.outputs.ref }}
+          path: .
+      - name: Create Pull Request for preview image
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: auto/preview-image-update-${{ needs.build.outputs.ref }}
+          title: "Update preview image for ${{ needs.build.outputs.ref }}"
+          commit-message: "Update preview image for ${{ needs.build.outputs.ref }}"
+          body: |
+            Automated update of resume preview image for version ${{ needs.build.outputs.ref }}.
+            Generated from tag `${{ needs.build.outputs.ref }}`.
+          base: main
+          add-paths: |
+            assets/resume-preview.png
+
+  release:
+    needs: [build]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts-${{ needs.build.outputs.ref }}
+          path: .
       - name: Release
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: "${{ env.REF }}"
+          name: "${{ needs.build.outputs.ref }}"
           files: |
             *.pdf
             *.png
