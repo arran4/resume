@@ -13,6 +13,8 @@ Or build it yourself, you will need to install `typst` on your platform. Details
 
 ## Installing Typst
 
+> **Note:** The CI pipeline is currently pinned to and tested with **Typst 0.15.1**. We recommend using this version (or a compatible release) to ensure rendering matches the automated builds.
+
 1. Visit <https://typst.app/docs/install/> and follow the steps for your operating system.
    - **macOS**: `brew install typst`
    - **Linux**: use your distribution's package manager if available:
@@ -41,15 +43,20 @@ TYPST_FONT_PATHS=./fonts typst compile -f png resume.typ resume-page-{n}.png
 
 This will create `resume.pdf` along with page images in the current directory.
 
-Typst will automatically fetch packages listed in `typst.toml`. When compiling
+Typst will automatically fetch dependencies (such as **`modern-cv` version 0.10.0** from the Typst Universe) based on `typst.toml` and the `#import` statements in `resume.typ`. When compiling
 for the first time, ensure you have network access so the
-`modern-cv` package can be downloaded via Typst's package manager. Simply run
+packages can be downloaded via Typst's package manager.
 
-```sh
-typst compile resume.typ
-```
+> **Important:** Compiling requires the local fonts. You must prefix your Typst commands with `TYPST_FONT_PATHS=./fonts` (as shown above) to ensure the local fonts are loaded, otherwise compilation will fail with missing font errors.
 
-and Typst will retrieve the dependency before building the PDF.
+### Updating the Toolchain and Dependencies
+
+When upgrading Typst or `modern-cv`, ensure all parts of the workflow remain in sync:
+
+1. Update the pinned `typst-version` in `.github/workflows/typst.yaml`.
+2. Update the `#import` version for `modern-cv` inside `resume.typ`.
+3. Update the `modern-cv` version in `typst.toml`.
+4. Update the documented versions in this `README.md`.
 
 This project is source-available for reference purposes only. Please do not redistribute or reuse the content without permission. However, feel free to copy the github actions code for compiling on tagging:
 

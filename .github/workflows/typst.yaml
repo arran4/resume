@@ -51,10 +51,10 @@ jobs:
           echo "REF=$REF" >> $GITHUB_ENV
           echo "REF=$REF" >> $GITHUB_OUTPUT
 
-      - name: Install Typst 0.14.0
+      - name: Install Typst 0.15.1
         uses: typst-community/setup-typst@v5
         with:
-          typst-version: "0.14.0"
+          typst-version: "0.15.1"
 
       - name: Compile resume PDF
         env:
