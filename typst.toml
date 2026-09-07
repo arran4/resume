@@ -1,5 +1,0 @@
-[dependencies]
-modern-cv = "0.10.0"
-
-[fonts]
-paths = ["fonts"]

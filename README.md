@@ -13,7 +13,10 @@ Or build it yourself, you will need to install `typst` on your platform. Details
 
 ## Installing Typst
 
-> **Note:** The CI pipeline is currently pinned to and tested with **Typst 0.15.1**. We recommend using this version (or a compatible release) to ensure rendering matches the automated builds.
+> **Note:** Reproducing the CI rendering requires exactly **Typst 0.15.1**. You can verify your version by running:
+> ```bash
+> typst --version
+> ```
 
 1. Visit <https://typst.app/docs/install/> and follow the steps for your operating system.
    - **macOS**: `brew install typst`
@@ -43,7 +46,7 @@ TYPST_FONT_PATHS=./fonts typst compile -f png resume.typ resume-page-{n}.png
 
 This will create `resume.pdf` along with page images in the current directory.
 
-Typst will automatically fetch dependencies (such as **`modern-cv` version 0.10.0** from the Typst Universe) based on `typst.toml` and the `#import` statements in `resume.typ`. When compiling
+Typst will automatically fetch dependencies (such as **`modern-cv` version 0.10.0** from the Typst Universe) based on the authoritative `#import` statements in `resume.typ`. When compiling
 for the first time, ensure you have network access so the
 packages can be downloaded via Typst's package manager.
 
@@ -55,8 +58,9 @@ When upgrading Typst or `modern-cv`, ensure all parts of the workflow remain in 
 
 1. Update the pinned `typst-version` in `.github/workflows/typst.yaml`.
 2. Update the `#import` version for `modern-cv` inside `resume.typ`.
-3. Update the `modern-cv` version in `typst.toml`.
-4. Update the documented versions in this `README.md`.
+3. Update the documented versions in this `README.md`.
+
+GitHub release tags (`v*`) are the documented project and release version source of truth.
 
 This project is source-available for reference purposes only. Please do not redistribute or reuse the content without permission. However, feel free to copy the github actions code for compiling on tagging:
 
