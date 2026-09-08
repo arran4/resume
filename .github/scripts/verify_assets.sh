@@ -26,19 +26,39 @@ fi
 echo "$PDF_FILE" >> "$MANIFEST_FILE"
 
 # 2. Complete expected page-PNG set produced by the build
-# We rely on globbing to find what was produced. If none were produced, it's an error.
-shopt -s nullglob
-PNG_FILES=(Arran-Ubels-${REF}-page-*.png)
-shopt -u nullglob
-
-if [[ ${#PNG_FILES[@]} -eq 0 ]]; then
-  echo "Error: Missing expected page-PNG set (Arran-Ubels-${REF}-page-*.png)" >&2
+# We derive the expected page count from the generated PDF.
+if ! command -v pdfinfo >/dev/null 2>&1; then
+  echo "Error: pdfinfo command not found. Please install poppler-utils." >&2
   exit 1
 fi
 
-for png in "${PNG_FILES[@]}"; do
-  echo "$png" >> "$MANIFEST_FILE"
+PAGE_COUNT=$(pdfinfo "$PDF_FILE" | grep "^Pages:" | awk '{print $2}')
+if [[ -z "$PAGE_COUNT" || ! "$PAGE_COUNT" =~ ^[0-9]+$ ]]; then
+  echo "Error: Could not determine page count from $PDF_FILE" >&2
+  exit 1
+fi
+
+if [[ "$PAGE_COUNT" -eq 0 ]]; then
+  echo "Error: PDF has 0 pages." >&2
+  exit 1
+fi
+
+for ((i=1; i<=PAGE_COUNT; i++)); do
+  PNG_FILE="Arran-Ubels-${REF}-page-${i}.png"
+  if [[ ! -f "$PNG_FILE" ]]; then
+    echo "Error: Missing expected page PNG: $PNG_FILE" >&2
+    exit 1
+  fi
+  echo "$PNG_FILE" >> "$MANIFEST_FILE"
 done
+
+# Check if there are unexpected extra PNG pages (e.g. page count is 2, but page-3.png exists)
+NEXT_PAGE=$((PAGE_COUNT + 1))
+UNEXPECTED_PNG="Arran-Ubels-${REF}-page-${NEXT_PAGE}.png"
+if [[ -f "$UNEXPECTED_PNG" ]]; then
+  echo "Error: Found unexpected extra page PNG: $UNEXPECTED_PNG" >&2
+  exit 1
+fi
 
 # 3. assets/resume-preview.png
 PREVIEW_FILE="assets/resume-preview.png"
