@@ -13,10 +13,14 @@ on:
   workflow_dispatch:
     inputs:
       update_preview:
-        description: "Commit the generated preview image directly to the default branch"
+        description: "Create a PR to update the preview image on the default branch"
         required: false
         default: false
         type: boolean
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref_type != 'tag' }}
 
 permissions:
   contents: read
@@ -79,43 +83,31 @@ jobs:
             assets/resume-preview.png
           include-hidden-files: true
 
-  update-preview:
-    needs: [build]
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.update_preview == 'true' && needs.build.outputs.changed == 'true'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - name: Download artifacts
-        uses: actions/download-artifact@v8
-        with:
-          name: build-artifacts-${{ needs.build.outputs.ref }}
-          path: .
-      - name: Commit preview image
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git pull --ff-only
-          git add assets/resume-preview.png
-          git commit -m "Update preview image for ${{ needs.build.outputs.ref }}"
-          git push
-
   create-preview-pr:
     needs: [build]
-    if: github.ref_type == 'tag' && needs.build.outputs.changed == 'true' && needs.build.outputs.publish == 'true'
+    if: >
+      needs.build.outputs.changed == 'true' &&
+      (
+        (github.ref_type == 'tag' && needs.build.outputs.publish == 'true') ||
+        (github.event_name == 'workflow_dispatch' && github.event.inputs.update_preview == 'true')
+      )
     runs-on: ubuntu-latest
+    concurrency:
+      group: preview-writer-${{ github.event.repository.default_branch }}
+      cancel-in-progress: false
     permissions:
       contents: write
       pull-requests: write
     steps:
-      - name: Checkout
+      - name: Checkout default branch
         uses: actions/checkout@v7
         with:
+          ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
+      - name: Log SHAs
+        run: |
+          echo "Source SHA: ${{ github.sha }}"
+          echo "Destination SHA: $(git rev-parse HEAD)"
       - name: Download artifacts
         uses: actions/download-artifact@v8
         with:
@@ -124,13 +116,13 @@ jobs:
       - name: Create Pull Request for preview image
         uses: peter-evans/create-pull-request@v8
         with:
-          branch: auto/preview-image-update-${{ needs.build.outputs.ref }}
+          branch: auto/preview-image-update-${{ github.sha }}
           title: "Update preview image for ${{ needs.build.outputs.ref }}"
           commit-message: "Update preview image for ${{ needs.build.outputs.ref }}"
           body: |
             Automated update of resume preview image for version ${{ needs.build.outputs.ref }}.
-            Generated from tag `${{ needs.build.outputs.ref }}`.
-          base: main
+            Generated from source SHA `${{ github.sha }}`.
+          base: ${{ github.event.repository.default_branch }}
           add-paths: |
             assets/resume-preview.png
 
