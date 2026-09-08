@@ -56,22 +56,8 @@ jobs:
         with:
           typst-version: "0.15.1"
 
-      - name: Compile resume PDF
-        env:
-          TYPST_FONT_PATHS: "./fonts/"
-        run: typst compile resume.typ "Arran-Ubels-${{ env.REF }}.pdf"
-
-      - name: Generate preview image
-        env:
-          TYPST_FONT_PATHS: "./fonts/"
-        run: |
-          mkdir -p assets
-          typst compile --ppi 300 --pages 1 resume.typ assets/resume-preview.png
-
-      - name: Compile resume PNG pages
-        env:
-          TYPST_FONT_PATHS: "./fonts/"
-        run: typst compile -f png resume.typ "Arran-Ubels-${{ env.REF }}-page-{n}.png"
+      - name: Build resume and assets
+        run: ./build.sh "Arran-Ubels-${{ env.REF }}"
 
       - name: Check for preview changes
         id: preview_diff

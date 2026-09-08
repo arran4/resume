@@ -37,12 +37,11 @@ Or build it yourself, you will need to install `typst` on your platform. Details
 Run the following commands from the repository root to generate the PDF and PNG outputs:
 
 ```bash
-# Generate PDF
-TYPST_FONT_PATHS=./fonts typst compile resume.typ resume.pdf
-
-# Generate PNG for each page
-TYPST_FONT_PATHS=./fonts typst compile -f png resume.typ resume-page-{n}.png
+# Generate PDF and PNGs locally (uses the same script as CI)
+./build.sh
 ```
+
+> **Determinism:** `build.sh` automatically exports `SOURCE_DATE_EPOCH` based on the timestamp of the latest git commit that affected `resume.typ`. This removes wall-clock time as a document input, ensures that preview-image-only commits do not incorrectly advance the document's date, and guarantees reproducible bit-for-bit rendering of the PDF and exact byte-for-byte reproducibility of PNG assets for any given revision.
 
 This will create `resume.pdf` along with page images in the current directory.
 
@@ -50,7 +49,7 @@ Typst will automatically fetch dependencies (such as **`modern-cv` version 0.10.
 for the first time, ensure you have network access so the
 packages can be downloaded via Typst's package manager.
 
-> **Important:** Compiling requires the local fonts. You must prefix your Typst commands with `TYPST_FONT_PATHS=./fonts` (as shown above) to ensure the local fonts are loaded, otherwise compilation will fail with missing font errors.
+> **Important:** Compiling requires the local fonts. The `build.sh` script automatically sets `TYPST_FONT_PATHS=./fonts` to ensure the local fonts are loaded.
 
 ### Updating the Toolchain and Dependencies
 
