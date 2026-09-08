@@ -2,7 +2,16 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
-VERIFY_SCRIPT="$SCRIPT_DIR/../.github/scripts/verify_assets.sh"
+VERIFY_SCRIPT="$(readlink -f "$SCRIPT_DIR/../.github/scripts/verify_assets.sh")"
+
+# Setup Mock pdfinfo
+MOCK_DIR=$(mktemp -d)
+cat << 'MOCK' > "$MOCK_DIR/pdfinfo"
+#!/bin/bash
+echo "Pages: ${MOCK_PDF_PAGES:-1}"
+MOCK
+chmod +x "$MOCK_DIR/pdfinfo"
+export PATH="$MOCK_DIR:$PATH"
 
 function run_test() {
   local ref="$1"
@@ -10,6 +19,7 @@ function run_test() {
 
   echo "Testing verify assets for REF: $ref"
 
+  # Ensure EXIT_CODE captures the actual return value, and we don't abort due to set -e
   set +e
   OUTPUT=$( "$VERIFY_SCRIPT" "$ref" 2>&1 )
   EXIT_CODE=$?
@@ -27,19 +37,14 @@ function run_test() {
 
 echo "Running verify tests..."
 
-# To test this, we need a valid PDF file. Let's create one.
-if ! command -v groff >/dev/null 2>&1; then
-  sudo apt-get update && sudo apt-get install -y groff gsfonts
-fi
-echo "Hello World" | groff -Tps | ps2pdf - Arran-Ubels-v1.0.0.pdf
-
 # Scenario 1: Missing PDF
 rm -f Arran-Ubels-v1.0.0.pdf Arran-Ubels-v1.0.0-page-1.png assets/resume-preview.png
 touch Arran-Ubels-v1.0.0-page-1.png assets/resume-preview.png
 run_test "v1.0.0" 1
 
 # Scenario 2: Missing PNG set
-echo "Hello World" | groff -Tps | ps2pdf - Arran-Ubels-v1.0.0.pdf
+export MOCK_PDF_PAGES=1
+touch Arran-Ubels-v1.0.0.pdf
 rm -f Arran-Ubels-v1.0.0-page-*.png
 touch assets/resume-preview.png
 run_test "v1.0.0" 1
@@ -53,28 +58,40 @@ run_test "v1.0.0" 1
 touch Arran-Ubels-v1.0.0-page-1.png assets/resume-preview.png
 run_test "v1.0.0" 0
 
-# Scenario 5: Missing a middle page (requires a 2-page PDF for test)
-# Mock pdfinfo since creating a multi-page PDF might be tricky in a one-liner
-# Actually we can just create a wrapper for pdfinfo to return "Pages: 2"
-mkdir -p mock_bin
-cat << 'MOCK' > mock_bin/pdfinfo
-#!/bin/bash
-echo "Pages: 2"
-MOCK
-chmod +x mock_bin/pdfinfo
-export PATH="$PWD/mock_bin:$PATH"
+# Verify manifest for valid case
+MANIFEST_FILE="release_manifest.txt"
+if [[ ! -f "$MANIFEST_FILE" ]]; then
+  echo "FAIL: release_manifest.txt not created"
+  exit 1
+fi
+EXPECTED_MANIFEST=$(printf "Arran-Ubels-v1.0.0-page-1.png\nArran-Ubels-v1.0.0.pdf\nassets/resume-preview.png")
+ACTUAL_MANIFEST=$(cat "$MANIFEST_FILE")
+if [[ "$EXPECTED_MANIFEST" != "$ACTUAL_MANIFEST" ]]; then
+  echo "FAIL: Manifest contents do not match expected output."
+  echo "Expected:"
+  echo "$EXPECTED_MANIFEST"
+  echo "Actual:"
+  echo "$ACTUAL_MANIFEST"
+  exit 1
+fi
+echo "Manifest contents verified."
+echo ""
 
+# Scenario 5: Missing a middle page (requires a 2-page PDF for test)
+export MOCK_PDF_PAGES=2
 rm -f Arran-Ubels-v1.0.0-page-*.png
 touch Arran-Ubels-v1.0.0-page-1.png assets/resume-preview.png
 # It expects page-2.png now
 run_test "v1.0.0" 1
 
 # Scenario 6: Unexpected extra page
-touch Arran-Ubels-v1.0.0-page-2.png Arran-Ubels-v1.0.0-page-3.png
+export MOCK_PDF_PAGES=1
+rm -f Arran-Ubels-v1.0.0-page-*.png
+touch Arran-Ubels-v1.0.0-page-1.png Arran-Ubels-v1.0.0-page-2.png assets/resume-preview.png
 run_test "v1.0.0" 1
 
 echo "All verify tests passed!"
 
 # Cleanup
-rm -f Arran-Ubels-v1.0.0.pdf Arran-Ubels-v1.0.0-page-*.png assets/resume-preview.png
-rm -rf mock_bin
+rm -f Arran-Ubels-v1.0.0.pdf Arran-Ubels-v1.0.0-page-*.png assets/resume-preview.png release_manifest.txt
+rm -rf "$MOCK_DIR"

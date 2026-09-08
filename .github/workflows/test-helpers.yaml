@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - '.github/scripts/**'
+      - '.github/workflows/test-helpers.yaml'
+      - '.github/workflows/typst.yaml'
       - 'tests/**'
   workflow_dispatch:
 
