@@ -1,0 +1,31 @@
+name: Test Release Helpers
+
+on:
+  pull_request:
+    paths:
+      - '.github/scripts/**'
+      - '.github/workflows/test-helpers.yaml'
+      - '.github/workflows/typst.yaml'
+      - 'tests/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Install poppler-utils (for pdfinfo)
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
+      - name: Run validate_tag tests
+        run: ./tests/test_validate_tag.sh
+
+      - name: Run verify_assets tests
+        run: ./tests/test_verify_assets.sh
