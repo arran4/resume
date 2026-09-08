@@ -2,7 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
-VALIDATE_SCRIPT="$SCRIPT_DIR/../.github/scripts/validate_tag.sh"
+VALIDATE_SCRIPT="$(readlink -f "$SCRIPT_DIR/../.github/scripts/validate_tag.sh")"
 
 function run_test() {
   local tag="$1"
@@ -12,8 +12,11 @@ function run_test() {
 
   echo "Testing tag: $tag"
 
-  OUTPUT=$( DEFAULT_BRANCH=main "$VALIDATE_SCRIPT" "$tag" 2>&1 ) || EXIT_CODE=$?
-  EXIT_CODE=${EXIT_CODE:-0}
+  # Ensure EXIT_CODE captures the actual return value, and we don't abort due to set -e
+  set +e
+  OUTPUT=$( DEFAULT_BRANCH=main "$VALIDATE_SCRIPT" "$tag" 2>&1 )
+  EXIT_CODE=$?
+  set -e
 
   if [[ "$EXIT_CODE" != "$expected_exit" ]]; then
     echo "FAIL: Expected exit code $expected_exit, got $EXIT_CODE"
@@ -38,35 +41,44 @@ function run_test() {
   echo ""
 }
 
-# Ensure we're in a git repo
-git rev-parse --is-inside-work-tree >/dev/null
+# Create an isolated temporary git repo
+TEST_DIR=$(mktemp -d)
+echo "Setting up isolated test repository at $TEST_DIR"
+pushd "$TEST_DIR" > /dev/null
 
-# Delete any old tags just in case
-git tag -d $(git tag -l "v*") 2>/dev/null || true
-git tag -d malformed 2>/dev/null || true
-git branch -D unreachable_branch 2>/dev/null || true
+git init -b main
+git config user.email "test@example.com"
+git config user.name "Test User"
+git commit --allow-empty -m "Initial commit"
+
+# Create a local 'origin/main' ref manually to avoid network operations
+git update-ref refs/remotes/origin/main HEAD
+git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/main
 
 # Lightweight tags
-git tag -f v1.2.3 origin/main
-git tag -f v1.2.3-rc origin/main
-git tag -f v1.2.3-rc.1 origin/main
-git tag -f v1.2.3-alpha.1 origin/main
-git tag -f v1.2.3-beta.1 origin/main
-git tag -f v1.2.3-test.1 origin/main
-git tag -f malformed origin/main
+git tag v1.2.3 HEAD
+git tag v1.2.3-rc HEAD
+git tag v1.2.3-rc.1 HEAD
+git tag v1.2.3-alpha.1 HEAD
+git tag v1.2.3-beta.1 HEAD
+git tag v1.2.3-test.1 HEAD
+git tag malformed HEAD
 
 # Annotated tags
-git tag -a -m "annotated test" v1.2.3-test.2 origin/main
-git tag -a -m "annotated rc" v1.2.3-rc.2 origin/main
+git tag -a -m "annotated test" v1.2.3-test.2 HEAD
+git tag -a -m "annotated rc" v1.2.3-rc.2 HEAD
 
 # Unrelated suffixes that should fail validation
-git tag -f v1.2.3-contest origin/main
-git tag -f v1.2.3-orchestra origin/main
+git tag v1.2.3-contest HEAD
+git tag v1.2.3-orchestra HEAD
 
-# Unreachable tag
-git checkout -b unreachable_branch origin/main~5
+# Unreachable tag - valid format, but unmerged commit
+git checkout -b unreachable_branch HEAD
 git commit --allow-empty -m "Unreachable commit"
-git tag -f v1.2.3-unreachable HEAD
+git tag v1.2.4-rc.3 HEAD
+# Also test an annotated unreachable tag
+git commit --allow-empty -m "Another Unreachable commit"
+git tag -a -m "annotated unreachable" v1.2.4-rc.4 HEAD
 git checkout main
 
 echo "Running validation tests..."
@@ -87,10 +99,12 @@ run_test "v1.2.3-rc.2" 0 "true" "true"
 run_test "v1.2.3-contest" 1 "" ""
 run_test "v1.2.3-orchestra" 1 "" ""
 run_test "malformed" 1 "" ""
-run_test "v1.2.3-unreachable" 1 "" ""
+
+# Reachability tests (valid format, but unreachable from main)
+run_test "v1.2.4-rc.3" 1 "" ""
+run_test "v1.2.4-rc.4" 1 "" ""
 
 echo "All validate tests passed!"
 
-# Cleanup test tags
-git tag -d $(git tag -l "v*") 2>/dev/null || true
-git branch -D unreachable_branch 2>/dev/null || true
+popd > /dev/null
+rm -rf "$TEST_DIR"

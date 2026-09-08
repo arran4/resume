@@ -146,6 +146,8 @@ jobs:
         with:
           name: build-artifacts-${{ needs.build.outputs.ref }}
           path: .
+      - name: Install poppler-utils (for pdfinfo)
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
       - name: Verify expected release assets exist
         id: verify_assets
         run: |
