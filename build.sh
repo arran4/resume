@@ -1,11 +1,15 @@
 #!/bin/bash
 set -eo pipefail
 
-if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    export SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)
+if [ -n "$SOURCE_DATE_EPOCH" ]; then
+    # Already explicitly supplied
+    :
+elif git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    # Derive deterministic date from the last commit affecting the source file.
+    export SOURCE_DATE_EPOCH=$(git log -1 --format=%ct -- resume.typ)
 else
-    # Fallback if downloaded as a zip file, for instance.
-    export SOURCE_DATE_EPOCH=$(date +%s)
+    echo "Error: SOURCE_DATE_EPOCH is not set and cannot derive deterministic date (not inside a git work tree)." >&2
+    exit 1
 fi
 
 if [ -n "$1" ]; then

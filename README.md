@@ -41,7 +41,7 @@ Run the following commands from the repository root to generate the PDF and PNG 
 ./build.sh
 ```
 
-> **Determinism:** `build.sh` automatically exports `SOURCE_DATE_EPOCH` based on the latest git commit timestamp. This removes wall-clock time as a document input and ensures reproducible bit-for-bit rendering of the PDF and exact byte-for-byte reproducibility of PNG assets for any given commit.
+> **Determinism:** `build.sh` automatically exports `SOURCE_DATE_EPOCH` based on the timestamp of the latest git commit that affected `resume.typ`. This removes wall-clock time as a document input, ensures that preview-image-only commits do not incorrectly advance the document's date, and guarantees reproducible bit-for-bit rendering of the PDF and exact byte-for-byte reproducibility of PNG assets for any given revision.
 
 This will create `resume.pdf` along with page images in the current directory.
 
