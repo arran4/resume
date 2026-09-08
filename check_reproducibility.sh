@@ -35,12 +35,14 @@ echo "Building after simulated preview artifact commit..."
 # Temporarily commit a generated artifact without changing resume.typ
 git config user.name "Test Bot"
 git config user.email "test@example.com"
-git add assets/resume-preview.png
-git commit -m "chore: generated artifact update" >/dev/null
+ORIG_HEAD=$(git rev-parse HEAD)
+trap "git reset --soft $ORIG_HEAD >/dev/null 2>&1" EXIT
+git commit --allow-empty -m "chore: generated artifact update" >/dev/null
 # Build again under future wall clock to verify date isn't advanced by preview update
 faketime "2030-01-02 12:00:00" ./build.sh "$DIR3/resume"
 # Reset the test commit
-git reset --soft HEAD~1
+git reset --soft $ORIG_HEAD >/dev/null 2>&1
+trap - EXIT
 
 echo "Comparing PDF bytes across wall clocks..."
 if ! cmp -s "$DIR1/resume.pdf" "$DIR2/resume.pdf"; then

@@ -49,7 +49,7 @@ Typst will automatically fetch dependencies (such as **`modern-cv` version 0.10.
 for the first time, ensure you have network access so the
 packages can be downloaded via Typst's package manager.
 
-> **Important:** Compiling requires the local fonts. You must prefix your Typst commands with `TYPST_FONT_PATHS=./fonts` (as shown above) to ensure the local fonts are loaded, otherwise compilation will fail with missing font errors.
+> **Important:** Compiling requires the local fonts. The `build.sh` script automatically sets `TYPST_FONT_PATHS=./fonts` to ensure the local fonts are loaded.
 
 ### Updating the Toolchain and Dependencies
 
