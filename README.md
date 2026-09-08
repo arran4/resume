@@ -37,12 +37,11 @@ Or build it yourself, you will need to install `typst` on your platform. Details
 Run the following commands from the repository root to generate the PDF and PNG outputs:
 
 ```bash
-# Generate PDF
-TYPST_FONT_PATHS=./fonts typst compile resume.typ resume.pdf
-
-# Generate PNG for each page
-TYPST_FONT_PATHS=./fonts typst compile -f png resume.typ resume-page-{n}.png
+# Generate PDF and PNGs locally (uses the same script as CI)
+./build.sh
 ```
+
+> **Determinism:** `build.sh` automatically exports `SOURCE_DATE_EPOCH` based on the latest git commit timestamp. This removes wall-clock time as a document input and ensures reproducible bit-for-bit rendering of the PDF and exact byte-for-byte reproducibility of PNG assets for any given commit.
 
 This will create `resume.pdf` along with page images in the current directory.
 

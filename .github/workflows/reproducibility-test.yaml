@@ -1,0 +1,27 @@
+name: Reproducibility Regression Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test-determinism:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Install Typst 0.15.1
+        uses: typst-community/setup-typst@v5
+        with:
+          typst-version: "0.15.1"
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y faketime poppler-utils
+
+      - name: Run Determinism Test
+        run: ./check_reproducibility.sh
