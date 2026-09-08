@@ -40,6 +40,7 @@ jobs:
         if: github.ref_type == 'tag'
         env:
           TAG_NAME: ${{ github.ref_name }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: .github/scripts/validate_tag.sh "$TAG_NAME"
 
       - name: Get Git reference
@@ -58,14 +59,9 @@ jobs:
       - name: Build resume and assets
         run: ./build.sh "Arran-Ubels-${{ env.REF }}"
 
-      - name: Generate Manifest and Check for preview changes
+      - name: Check for preview changes
         id: preview_diff
         run: |
-          echo "## Release Artifacts Manifest" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          ls -1 Arran-Ubels-${{ env.REF }}.pdf Arran-Ubels-${{ env.REF }}-page-*.png assets/resume-preview.png >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-
           if git diff --quiet -- assets/resume-preview.png; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
@@ -110,7 +106,7 @@ jobs:
 
   create-preview-pr:
     needs: [build]
-    if: github.ref_type == 'tag' && needs.build.outputs.changed == 'true'
+    if: github.ref_type == 'tag' && needs.build.outputs.changed == 'true' && needs.build.outputs.publish == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -151,12 +147,14 @@ jobs:
           name: build-artifacts-${{ needs.build.outputs.ref }}
           path: .
       - name: Verify expected release assets exist
+        id: verify_assets
         run: |
-          ls -la
-          # Fail immediately if any expected file doesn't exist
-          ls Arran-Ubels-${{ needs.build.outputs.ref }}.pdf
-          ls Arran-Ubels-${{ needs.build.outputs.ref }}-page-1.png
-          ls assets/resume-preview.png
+          MANIFEST=$(.github/scripts/verify_assets.sh "${{ needs.build.outputs.ref }}")
+          # Store the multiline manifest to an output so it can be passed to the release action exactly
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "manifest<<$EOF" >> $GITHUB_OUTPUT
+          echo "$MANIFEST" >> $GITHUB_OUTPUT
+          echo "$EOF" >> $GITHUB_OUTPUT
       - name: Release
         uses: softprops/action-gh-release@v3
         with:
@@ -164,6 +162,4 @@ jobs:
           prerelease: ${{ needs.build.outputs.prerelease == 'true' }}
           fail_on_unmatched_files: true
           files: |
-            *.pdf
-            *.png
-            assets/resume-preview.png
+            ${{ steps.verify_assets.outputs.manifest }}

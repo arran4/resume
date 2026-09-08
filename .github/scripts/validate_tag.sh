@@ -3,32 +3,53 @@ set -euo pipefail
 
 # This script validates a release tag and determines release properties.
 # Inputs:
-#   TAG_NAME (from env or arg 1)
+#   TAG_NAME (from arg 1)
+#   DEFAULT_BRANCH (from env DEFAULT_BRANCH)
 # Outputs (to stdout and GITHUB_OUTPUT):
 #   prerelease (true/false)
 #   publish (true/false)
 
-TAG_NAME="${1:-${TAG_NAME:-}}"
+TAG_NAME="${1:-}"
 
 if [[ -z "$TAG_NAME" ]]; then
   echo "Error: TAG_NAME is required." >&2
   exit 1
 fi
 
-if [[ ! "$TAG_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.]+)?$ ]]; then
+if [[ -z "${DEFAULT_BRANCH:-}" ]]; then
+  echo "Error: DEFAULT_BRANCH environment variable must be provided." >&2
+  exit 1
+fi
+
+# The format should be vMAJOR.MINOR.PATCH[-SUFFIX]
+# We'll use bash regex groups to parse the suffix if present
+if [[ ! "$TAG_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-.]([0-9A-Za-z.]+))?$ ]]; then
   echo "Invalid release tag format: $TAG_NAME" >&2
   exit 1
 fi
 
+SUFFIX="${BASH_REMATCH[2]:-}"
 PRERELEASE="false"
 PUBLISH="true"
 
-# Case-insensitive check for test tags
-if echo "$TAG_NAME" | grep -iq "test"; then
-  PUBLISH="false"
-# Case-insensitive check for prerelease tags
-elif echo "$TAG_NAME" | grep -iqE "rc|alpha|beta"; then
-  PRERELEASE="true"
+# Explicit policy for suffixes
+if [[ -z "$SUFFIX" ]]; then
+  # Stable release
+  PRERELEASE="false"
+  PUBLISH="true"
+else
+  # Check against allowed suffixes precisely
+  # Convert suffix to lowercase for case-insensitive matching
+  SUFFIX_LOWER=$(echo "$SUFFIX" | tr '[:upper:]' '[:lower:]')
+
+  if [[ "$SUFFIX_LOWER" =~ ^test(\.[0-9]+)?$ ]]; then
+    PUBLISH="false"
+  elif [[ "$SUFFIX_LOWER" =~ ^(rc|alpha|beta)(\.[0-9]+)?$ ]]; then
+    PRERELEASE="true"
+  else
+    echo "Error: Unrecognized tag suffix '${SUFFIX}'. Accepted suffixes are 'test', 'rc', 'alpha', 'beta' (optionally followed by a dot and a number)." >&2
+    exit 1
+  fi
 fi
 
 if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
@@ -41,18 +62,6 @@ echo "  prerelease=$PRERELEASE"
 echo "  publish=$PUBLISH"
 
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  # Determine default branch
-  DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "")
-  if [[ -z "$DEFAULT_BRANCH" ]]; then
-    if git show-ref --verify --quiet refs/remotes/origin/main 2>/dev/null; then
-      DEFAULT_BRANCH="main"
-    elif git show-ref --verify --quiet refs/remotes/origin/master 2>/dev/null; then
-      DEFAULT_BRANCH="master"
-    else
-      DEFAULT_BRANCH="main"
-    fi
-  fi
-
   # Resolve lightweight and annotated tags
   if git show-ref --verify --quiet "refs/tags/$TAG_NAME" 2>/dev/null; then
     TAG_COMMIT=$(git rev-parse "refs/tags/${TAG_NAME}^{commit}")
