@@ -29,3 +29,6 @@ jobs:
 
       - name: Run verify_assets tests
         run: ./tests/test_verify_assets.sh
+
+      - name: Run workflow concurrency semantics tests
+        run: ./tests/test_workflow_concurrency_semantics.sh
