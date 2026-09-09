@@ -1,0 +1,168 @@
+name: CI
+
+# Canonical CI/CD reference: https://arran4.github.io/blog/post/2026/043-canonical-github-actions-ci-cd-super-reference/
+
+on:
+  push:
+    branches: ["main"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Manual run mode'
+        required: true
+        default: 'build'
+        type: choice
+        options:
+          - build
+          - update-preview
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref_type != 'tag' && github.ref != 'refs/heads/main' }}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Run codespell
+        uses: codespell-project/actions-codespell@v2
+        with:
+          check_filenames: true
+
+      - name: Install Typst 0.15.1
+        uses: typst-community/setup-typst@v5
+        with:
+          typst-version: "0.15.1"
+
+      - name: Get Git reference
+        id: tag
+        run: |
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            REF=${GITHUB_REF#refs/*/}
+          else
+            REF=${GITHUB_SHA::7}
+          fi
+          REF=${REF//\//-}
+          echo "REF=$REF" >> $GITHUB_ENV
+
+      - name: Build resume and assets
+        run: ./build.sh "Arran-Ubels-${{ env.REF }}"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-artifacts-${{ env.REF }}
+          retention-days: 1
+          path: |
+            Arran-Ubels-${{ env.REF }}.pdf
+            Arran-Ubels-${{ env.REF }}-page-*.png
+            assets/resume-preview.png
+
+      - name: Install poppler-utils (for pdfinfo)
+        if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, '-test')
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
+      - name: Verify release assets
+        if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, '-test')
+        run: |
+          PDF="Arran-Ubels-${{ env.REF }}.pdf"
+          if [[ ! -f "$PDF" ]]; then
+            echo "Missing $PDF"
+            exit 1
+          fi
+          PAGES=$(pdfinfo "$PDF" | grep "^Pages:" | awk '{print $2}')
+          for ((i=1; i<=PAGES; i++)); do
+            if [[ ! -f "Arran-Ubels-${{ env.REF }}-page-${i}.png" ]]; then
+              echo "Missing page $i"
+              exit 1
+            fi
+          done
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, '-test')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Get Git reference
+        id: tag
+        run: |
+          REF=${GITHUB_REF#refs/*/}
+          REF=${REF//\//-}
+          echo "REF=$REF" >> $GITHUB_ENV
+      - name: Download artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: build-artifacts-${{ env.REF }}
+          path: .
+      - name: Release
+        uses: softprops/action-gh-release@v3
+        with:
+          name: "${{ env.REF }}"
+          prerelease: ${{ contains(github.ref, '-rc') || contains(github.ref, '-alpha') || contains(github.ref, '-beta') }}
+          fail_on_unmatched_files: true
+          files: |
+            Arran-Ubels-${{ env.REF }}.pdf
+            Arran-Ubels-${{ env.REF }}-page-*.png
+            assets/resume-preview.png
+
+  preview:
+    needs: build
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'update-preview'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+      - name: Get Git reference
+        id: tag
+        run: |
+          REF=${GITHUB_SHA::7}
+          REF=${REF//\//-}
+          echo "REF=$REF" >> $GITHUB_ENV
+      - name: Download artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: build-artifacts-${{ env.REF }}
+          path: .
+      - name: Check for preview changes
+        id: preview_diff
+        run: |
+          if git diff --quiet -- assets/resume-preview.png; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Create Pull Request for preview image
+        if: steps.preview_diff.outputs.changed == 'true'
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git checkout -b auto/preview-image-update-${{ github.sha }}
+          git add assets/resume-preview.png
+          git commit -m "Update preview image for ${{ env.REF }}"
+
+          # Push the branch
+          git push origin auto/preview-image-update-${{ github.sha }}
+
+          # Create PR from checked-out branch using gh cli with markdown body
+          gh pr create \
+            --title "Update preview image for ${{ env.REF }}" \
+            --body "Automated update of resume preview image for version ${{ env.REF }}.$\nGenerated from source SHA \`${{ github.sha }}\`." \
+            --base ${{ github.event.repository.default_branch }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
