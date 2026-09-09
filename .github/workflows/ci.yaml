@@ -1,11 +1,22 @@
 name: CI
 
+# Canonical CI/CD reference: https://arran4.github.io/blog/post/2026/043-canonical-github-actions-ci-cd-super-reference/
+
 on:
   push:
-    branches: ["**"]
+    branches: ["main"]
     tags: ["v*"]
   pull_request:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Manual run mode'
+        required: true
+        default: 'build'
+        type: choice
+        options:
+          - build
+          - update-preview
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,7 +29,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -47,10 +58,10 @@ jobs:
         run: ./build.sh "Arran-Ubels-${{ env.REF }}"
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build-artifacts-${{ env.REF }}
-          retention-days: 5
+          retention-days: 1
           path: |
             Arran-Ubels-${{ env.REF }}.pdf
             Arran-Ubels-${{ env.REF }}-page-*.png
@@ -90,7 +101,7 @@ jobs:
           REF=${REF//\//-}
           echo "REF=$REF" >> $GITHUB_ENV
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: build-artifacts-${{ env.REF }}
           path: .
@@ -107,14 +118,15 @@ jobs:
 
   preview:
     needs: build
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'update-preview'
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
+          ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
       - name: Get Git reference
         id: tag
@@ -123,7 +135,7 @@ jobs:
           REF=${REF//\//-}
           echo "REF=$REF" >> $GITHUB_ENV
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: build-artifacts-${{ env.REF }}
           path: .
@@ -153,4 +165,4 @@ jobs:
             --body "Automated update of resume preview image for version ${{ env.REF }}.\nGenerated from source SHA `${{ github.sha }}`." \
             --base ${{ github.event.repository.default_branch }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUb_TOKEN }}
