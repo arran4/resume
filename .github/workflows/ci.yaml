@@ -159,10 +159,10 @@ jobs:
           # Push the branch
           git push origin auto/preview-image-update-${{ github.sha }}
 
-          # Create PR from checked-out branch using gh cli
+          # Create PR from checked-out branch using gh cli with markdown body
           gh pr create \
             --title "Update preview image for ${{ env.REF }}" \
-            --body "Automated update of resume preview image for version ${{ env.REF }}.\nGenerated from source SHA `${{ github.sha }}`." \
+            --body "Automated update of resume preview image for version ${{ env.REF }}.$\nGenerated from source SHA \`${{ github.sha }}\`." \
             --base ${{ github.event.repository.default_branch }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
